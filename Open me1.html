@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Mummy!</title>
+    <style>
+        /* importing fonts from the FIRST design */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Gradient from the FIRST design */
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            /* Container styling from FIRST design */
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            z-index: 10;
+        }
+
+        /* Styling for the steps (managing what is visible) */
+        .step {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .step.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* --- ELEMENTS FROM FIRST DESIGN --- */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #d81b60;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+
+        p.message {
+            color: #4a4a4a;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: #d81b60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(216, 27, 96, 0.6);
+        }
+
+        /* --- NEW BOOSTER ELEMENT STYLING --- */
+        .big-booster {
+            font-size: 8rem; /* BIG party booster */
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s;
+            /* Gentle pulse animation to invite the click */
+            animation: pulse 1.5s infinite;
+        }
+
+        .big-booster:hover {
+            transform: scale(1.1);
+            animation: none; /* stop pulsing on hover */
+        }
+
+        .booster-text {
+            font-family: 'Dancing Script', cursive;
+            color: #d81b60;
+            font-size: 2rem;
+            margin-top: 10px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- ANIMATION STYLES (HEARTS) --- */
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            color: #ff4081;
+            font-size: 2rem;
+            animation: floatHeart 4s ease-in infinite;
+            z-index: 1;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        /* --- ANIMATION STYLES (CONFETTI) --- */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            z-index: 5;
+            animation: fallConfetti linear forwards;
+            border-radius: 2px;
+        }
+
+        @keyframes fallConfetti {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="step-1" class="step active">
+            <button class="btn" id="startBtn">Tap here</button>
+        </div>
+
+        <div id="step-2" class="step">
+            <div class="big-booster" id="boosterBtn">🎉</div>
+            <div class="booster-text">Tap to boost the party!</div>
+        </div>
+
+        <div id="step-3" class="step">
+            <h1>Happy Birthday, Mummy🎉</h1>
+            <p class="message">
+                Thank you for your endless love, patience, and support. You are the glue that holds everything together and the brightest light in my life. I hope your special day is as beautiful and amazing as you are🎊🎉🥳
+                <br><br>
+                Enjoy your day !
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        
+        const startBtn = document.getElementById('startBtn');
+        const boosterBtn = document.getElementById('boosterBtn');
+
+        // Function to handle showing/hiding steps smoothly
+        function showStep(stepToHide, stepToShow) {
+            stepToHide.style.opacity = '0';
+            setTimeout(() => {
+                stepToHide.classList.remove('active');
+                stepToShow.classList.add('active');
+                // Trigger reflow
+                void stepToShow.offsetWidth;
+                stepToShow.style.opacity = '1';
+            }, 500); // Wait for fade out
+        }
+
+        // Logic for first button click
+        startBtn.addEventListener('click', () => {
+            showStep(step1, step2);
+        });
+
+        // Logic for big booster click
+        boosterBtn.addEventListener('click', () => {
+            // Trigger ALL effects!
+            createHearts();
+            createConfetti();
+            // Show final message
+            showStep(step2, step3);
+        });
+
+        // --- EFFECT FUNCTIONS ---
+
+        function createHearts() {
+            const colors = ['#ff4081', '#d81b60', '#ff80ab', '#f50057'];
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.classList.add('heart');
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 150);
+            }
+        }
+
+        function createConfetti() {
+            // Match design colors: pinks, purples, golds
+            const colors = ['#d81b60', '#ff4081', '#fbc2eb', '#a6c1ee', '#FFD700'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10vh';
+                const duration = Math.random() * 3 + 2;
+                confetti.style.animationDuration = duration + 's';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), (duration + 1) * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
